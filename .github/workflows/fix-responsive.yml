@@ -1,4 +1,4 @@
-name: "Ajuste card de abertura Central NOC"
+name: "Frontend laranja Central NOC"
 
 "on":
   push:
@@ -9,23 +9,80 @@ permissions:
   contents: write
 
 jobs:
-  opening-card:
+  frontend-orange:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Remover motivo do card de abertura
+      - name: Aplicar novo frontend
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
+          marker = '/* central-noc-orange-ui-v1 */'
+          css = r'''
+/* central-noc-orange-ui-v1 */
+#loginView{
+  position:fixed;inset:0;max-width:none!important;margin:0!important;padding:0!important;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:
+    radial-gradient(circle at 18% 22%,rgba(255,255,255,.10) 0 70px,transparent 72px),
+    radial-gradient(circle at 82% 18%,rgba(255,255,255,.08) 0 52px,transparent 54px),
+    radial-gradient(circle at 74% 76%,rgba(255,255,255,.07) 0 95px,transparent 97px),
+    linear-gradient(120deg,#ffb000 0%,#ff8a00 42%,#ff5a00 100%);
+}
+#loginView::before{
+  content:'CENTRAL NOC';position:absolute;top:17%;left:50%;transform:translateX(-50%);
+  color:#fff;font-weight:900;font-size:clamp(28px,4vw,54px);letter-spacing:.06em;
+  text-shadow:0 8px 30px rgba(117,47,0,.18)
+}
+#loginView::after{
+  content:'';position:absolute;width:520px;height:520px;border:42px solid rgba(255,255,255,.12);
+  border-radius:50%;right:-190px;bottom:-240px;box-shadow:0 0 0 42px rgba(255,255,255,.07),0 0 0 84px rgba(255,255,255,.045)
+}
+#loginView .login{
+  position:relative;z-index:2;width:min(390px,calc(100vw - 34px));margin:70px 0 0!important;
+  background:#fff!important;color:#172033!important;border:0!important;border-radius:14px!important;
+  box-shadow:0 24px 70px rgba(112,48,0,.28)!important;padding:28px!important
+}
+#loginView .login h2{color:#172033!important;font-size:24px;margin-bottom:8px}
+#loginView .login h2::after{content:'Gestão Operacional de Incidentes';display:block;font-size:12px;font-weight:600;color:#667085;margin-top:5px}
+#loginView label{color:#344054!important}
+#loginView input{background:#fff!important;color:#172033!important;border:1px solid #c7cfdb!important;border-radius:8px!important;min-height:46px}
+#loginView input:focus{border-color:#ff7a00!important;box-shadow:0 0 0 3px rgba(255,122,0,.13)}
+#loginView .primary{width:100%;margin-top:10px;background:linear-gradient(135deg,#ff9b00,#ff6800)!important;border-radius:8px!important;box-shadow:0 8px 22px rgba(255,105,0,.24)}
 
-          old = "[\"SLA\",sla(i)],[\"MOTIVO\",i.motivo||'-','span2'],[\"OBSERVAÇÕES\",i.observacoes||'-','span4']"
-          new = "[\"SLA\",sla(i)],[\"OBSERVAÇÕES\",i.observacoes||'-','span4']"
-          if old in s:
-              s = s.replace(old, new, 1)
-
+#appView{max-width:1600px!important;background:#f4f7fb;color:#172033;min-height:100vh}
+#appView .top{background:linear-gradient(120deg,#ff9d00,#ff6800)!important;border:0!important;box-shadow:0 12px 30px rgba(255,105,0,.18)!important}
+#appView .top h1{color:#fff!important}
+#appView .top .sub,#appView .top .userbox .sub{color:rgba(255,255,255,.88)!important}
+#appView .top .ghost{border-color:rgba(255,255,255,.55)!important;color:#fff!important;background:rgba(255,255,255,.10)!important}
+#appView .stat,#appView .panel{background:#fff!important;border:1px solid #e7ebf1!important;box-shadow:0 10px 28px rgba(16,24,40,.07)!important}
+#appView .stat span{color:#7a8699!important}
+#appView .stat b,#appView .panel h2{color:#172033!important}
+#appView label{color:#596579!important}
+#appView input,#appView select,#appView textarea{background:#fff!important;color:#172033!important;border:1px solid #ccd5e1!important}
+#appView input:focus,#appView select:focus,#appView textarea:focus{border-color:#ff7a00!important;box-shadow:0 0 0 3px rgba(255,122,0,.10)}
+#appView .topobox,#appView .topocard{background:#fffaf5!important;border-color:#ffd3aa!important}
+#appView .tablewrap{background:#fff!important;border-color:#e6eaf0!important}
+#appView table{color:#172033!important}
+#appView th{background:#fff3e8!important;color:#9a4b00!important;border-bottom:1px solid #ffd9b5!important}
+#appView td{border-bottom:1px solid #eef1f5!important}
+#appView tbody tr:hover{background:#fffaf6!important}
+#appView .ghost{color:#334155!important;background:#fff!important;border:1px solid #d7dee8!important}
+#appView .primary{background:linear-gradient(135deg,#ff9500,#ff6800)!important}
+#appView .modalbox{background:#fff!important;color:#172033!important;border-color:#e1e6ee!important;box-shadow:0 30px 80px rgba(0,0,0,.28)}
+#appView .modalbox label{color:#596579!important}
+#appView .notice{background:#effcf5!important;border-color:#b9ebcf!important;color:#167546!important}
+@media(max-width:680px){
+  #loginView::before{top:10%;font-size:30px}
+  #loginView .login{margin-top:45px!important;padding:22px!important}
+  #appView{padding:9px!important}
+}
+'''
+          if marker not in s:
+              s = s.replace('</style>', css + '\n</style>', 1)
           p.write_text(s, encoding='utf-8')
           PY
       - name: Commit
@@ -34,5 +91,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Remove motivo do card de abertura"
+          git commit -m "Aplica frontend laranja moderno ao Central NOC"
           git push
