@@ -1,4 +1,4 @@
-name: "Card verde de normalização Central NOC"
+name: "Ajuste card de abertura Central NOC"
 
 "on":
   push:
@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 jobs:
-  green-card:
+  opening-card:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Aplicar identidade verde ao card normalizado
+      - name: Remover motivo do card de abertura
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -21,12 +21,10 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          s = s.replace('--o:#ff7900;--o2:#ff9f1a','--o:#19a963;--o2:#22c55e',1)
-          s = s.replace('border-color:var(--o);background:#fff8f1;box-shadow:0 18px 44px rgba(255,122,0,.18)','border-color:#19a963;background:#f3fff7;box-shadow:0 18px 44px rgba(25,169,99,.18)',1)
-          s = s.replace('background:linear-gradient(135deg,var(--o2),#ff6500)','background:linear-gradient(135deg,#22c55e,#15803d)',1)
-          s = s.replace('background:linear-gradient(180deg,#fffaf6,#fff2e5)','background:linear-gradient(180deg,#f7fff9,#ecfdf3)',1)
-          s = s.replace('border:1px solid #ffd7b0','border:1px solid #b7ebc8',1)
-          s = s.replace('.ficha.green .lab{color:#a95000}', '.ficha.green .lab{color:#15803d}',1)
+          old = "[\"SLA\",sla(i)],[\"MOTIVO\",i.motivo||'-','span2'],[\"OBSERVAÇÕES\",i.observacoes||'-','span4']"
+          new = "[\"SLA\",sla(i)],[\"OBSERVAÇÕES\",i.observacoes||'-','span4']"
+          if old in s:
+              s = s.replace(old, new, 1)
 
           p.write_text(s, encoding='utf-8')
           PY
@@ -36,5 +34,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Deixa card de normalização verde"
+          git commit -m "Remove motivo do card de abertura"
           git push
