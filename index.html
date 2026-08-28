@@ -15,7 +15,8 @@ frame.addEventListener('load',()=>{
   if(!d.getElementById('central-noc-orange-theme')){
    const s=d.createElement('style');s.id='central-noc-orange-theme';s.textContent=`
 html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!important}
-#loginView{position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:radial-gradient(circle at 13% 20%,rgba(255,255,255,.09) 0 54px,transparent 56px),radial-gradient(circle at 84% 18%,rgba(255,255,255,.07) 0 42px,transparent 44px),linear-gradient(118deg,#ffb000 0%,#ff9200 40%,#ff6500 72%,#ff5200 100%)!important}
+#loginView:not(.hidden){position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:radial-gradient(circle at 13% 20%,rgba(255,255,255,.09) 0 54px,transparent 56px),radial-gradient(circle at 84% 18%,rgba(255,255,255,.07) 0 42px,transparent 44px),linear-gradient(118deg,#ffb000 0%,#ff9200 40%,#ff6500 72%,#ff5200 100%)!important}
+#loginView.hidden{display:none!important}
 #loginView::before{content:'CENTRAL NOC';position:absolute;top:19%;left:50%;transform:translateX(-50%);z-index:2;color:#fff;font-weight:900;font-size:clamp(32px,4vw,58px);letter-spacing:.055em;white-space:nowrap;text-shadow:0 8px 28px rgba(123,45,0,.18)}
 #loginView::after{content:'';position:absolute;right:-170px;bottom:-230px;width:540px;height:540px;border-radius:50%;border:44px solid rgba(255,255,255,.14);box-shadow:0 0 0 48px rgba(255,255,255,.075),0 0 0 96px rgba(255,255,255,.04)}
 #loginView .login{position:relative!important;z-index:3!important;width:min(390px,calc(100vw - 34px))!important;margin:80px 0 0!important;padding:30px!important;background:#fff!important;color:#172033!important;border:0!important;border-radius:14px!important;box-shadow:0 28px 75px rgba(118,45,0,.28)!important}
@@ -40,7 +41,6 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
   const btn=d.getElementById('loginBtn');
   const enterLogin=(e)=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();btn?.click();}};
   [user,pass].forEach(el=>{if(el&&!el.dataset.enterBound){el.addEventListener('keydown',enterLogin);el.dataset.enterBound='1';}});
-  if(pass&&!pass.dataset.focusBound){user?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!pass.value){e.preventDefault();pass.focus();}});pass.dataset.focusBound='1';}
   setTimeout(()=>{if(user&&user.value)pass?.focus();else user?.focus();},50);
  }catch(e){console.error(e)}
 });
