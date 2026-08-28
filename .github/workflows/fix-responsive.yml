@@ -1,0 +1,83 @@
+name: Corrigir responsividade Central NOC
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-responsive.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-responsive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ajustar layout responsivo
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_table = 'table{width:100%;border-collapse:collapse;min-width:1100px}'
+          new_table = 'table{width:100%;border-collapse:collapse;min-width:980px}'
+          if old_table in s:
+              s = s.replace(old_table, new_table, 1)
+
+          old_breakpoint = '@media(max-width:1100px){.grid{grid-template-columns:360px minmax(0,1fr)}.wrap{padding:14px}}'
+          new_breakpoint = '@media(max-width:1450px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.tablewrap table{min-width:1050px}.ficha{width:100%;max-width:100%}}'
+          if old_breakpoint in s:
+              s = s.replace(old_breakpoint, new_breakpoint, 1)
+
+          marker = '/* responsive-fix-v2 */'
+          extra = r'''
+/* responsive-fix-v2 */
+@media(max-width:1180px){
+  .tablewrap{overflow-x:auto;max-width:100%}
+  .toolbar{align-items:stretch}
+  .tools{width:100%}
+  .tools input{flex:1;min-width:220px}
+  .ficha{width:100%;max-width:100%}
+  .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .span4{grid-column:1/-1}
+}
+@media(max-width:900px){
+  .tablewrap{overflow:visible;border:0}
+  .tablewrap table,.tablewrap tbody,.tablewrap tr,.tablewrap td{display:block;width:100%}
+  .tablewrap thead{display:none}
+  .tablewrap table{min-width:0}
+  .tablewrap tbody{display:grid;gap:9px}
+  .tablewrap tr{background:#0c1729;border:1px solid #263958;border-radius:13px;padding:9px}
+  .tablewrap td{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 3px;border-bottom:1px solid rgba(255,255,255,.05);white-space:normal;text-align:right}
+  .tablewrap td::before{content:attr(data-label);font-size:9px;text-transform:uppercase;color:#8fa6c8;font-weight:900;min-width:88px;text-align:left}
+  .tablewrap td:last-child{border-bottom:0;display:grid;grid-template-columns:1fr;gap:6px}
+  .tablewrap td:last-child::before{content:'Ações';text-align:left}
+  .tablewrap td:last-child .btn{width:100%}
+  .fgrid,.ficha.green .fgrid{grid-template-columns:1fr!important;padding:9px;gap:7px}
+  .span2,.span4,.ficha.green .span2,.ficha.green .span4{grid-column:1!important}
+  .ficha.green .cell{min-height:auto}
+}
+'''
+          if marker not in s:
+              s = s.replace('</style>', extra + '\n</style>', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit da correção
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "Nenhuma alteração necessária."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Corrige responsividade do monitoramento NOC"
+          git push
