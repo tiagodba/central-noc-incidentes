@@ -11,8 +11,9 @@
 const frame=document.getElementById('app');
 frame.addEventListener('load',()=>{
  try{
-  const d=frame.contentDocument;if(!d||d.getElementById('central-noc-orange-theme'))return;
-  const s=d.createElement('style');s.id='central-noc-orange-theme';s.textContent=`
+  const d=frame.contentDocument;if(!d)return;
+  if(!d.getElementById('central-noc-orange-theme')){
+   const s=d.createElement('style');s.id='central-noc-orange-theme';s.textContent=`
 html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!important}
 #loginView{position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:radial-gradient(circle at 13% 20%,rgba(255,255,255,.09) 0 54px,transparent 56px),radial-gradient(circle at 84% 18%,rgba(255,255,255,.07) 0 42px,transparent 44px),linear-gradient(118deg,#ffb000 0%,#ff9200 40%,#ff6500 72%,#ff5200 100%)!important}
 #loginView::before{content:'CENTRAL NOC';position:absolute;top:19%;left:50%;transform:translateX(-50%);z-index:2;color:#fff;font-weight:900;font-size:clamp(32px,4vw,58px);letter-spacing:.055em;white-space:nowrap;text-shadow:0 8px 28px rgba(123,45,0,.18)}
@@ -33,6 +34,14 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
 .ficha:not(.green){border-color:#e04c56!important;background:#fff!important}.ficha:not(.green) .fhead{background:#fff0f1!important;color:#c5313d!important}.ficha.green{border-color:#19a963!important;background:#f3fff7!important}.ficha.green .fhead{background:linear-gradient(135deg,#22c55e,#15803d)!important;color:#fff!important}
 @media(max-width:680px){#loginView::before{top:11%;font-size:30px}#loginView .login{margin-top:48px!important;padding:22px!important}#appView{padding:9px!important}}
 `;d.head.appendChild(s);
+  }
+  const user=d.getElementById('username');
+  const pass=d.getElementById('password');
+  const btn=d.getElementById('loginBtn');
+  const enterLogin=(e)=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();btn?.click();}};
+  [user,pass].forEach(el=>{if(el&&!el.dataset.enterBound){el.addEventListener('keydown',enterLogin);el.dataset.enterBound='1';}});
+  if(pass&&!pass.dataset.focusBound){user?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!pass.value){e.preventDefault();pass.focus();}});pass.dataset.focusBound='1';}
+  setTimeout(()=>{if(user&&user.value)pass?.focus();else user?.focus();},50);
  }catch(e){console.error(e)}
 });
 </script>
