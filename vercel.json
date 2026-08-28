@@ -1,6 +1,1 @@
-{
-  "rewrites": [
-    { "source": "/", "destination": "/orange.html" },
-    { "source": "/legacy", "destination": "/index.html" }
-  ]
-}
+{}
