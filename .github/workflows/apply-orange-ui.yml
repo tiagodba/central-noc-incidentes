@@ -33,25 +33,10 @@ jobs:
           css = r'''
 /* central-noc-orange-ui-direct-v2 */
 html,body{min-height:100%}
-#loginView{
-  position:fixed!important;inset:0!important;max-width:none!important;width:100%!important;height:100vh!important;
-  margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;
-  overflow:hidden!important;background:linear-gradient(118deg,#ffb000 0%,#ff9200 40%,#ff6500 72%,#ff5200 100%)!important;
-}
-#loginView::before{
-  content:'CENTRAL NOC';position:absolute;top:20%;left:50%;transform:translateX(-50%);z-index:2;
-  color:#fff;font-weight:900;font-size:clamp(32px,4vw,58px);letter-spacing:.055em;white-space:nowrap;
-  text-shadow:0 8px 28px rgba(123,45,0,.18)
-}
-#loginView::after{
-  content:'';position:absolute;right:-170px;bottom:-230px;width:540px;height:540px;border-radius:50%;
-  border:44px solid rgba(255,255,255,.14);box-shadow:0 0 0 48px rgba(255,255,255,.075),0 0 0 96px rgba(255,255,255,.04)
-}
-#loginView .login{
-  position:relative;z-index:3;width:min(390px,calc(100vw - 34px))!important;margin:80px 0 0!important;padding:30px!important;
-  background:#fff!important;color:#172033!important;border:0!important;border-radius:14px!important;
-  box-shadow:0 28px 75px rgba(118,45,0,.28)!important
-}
+#loginView{position:fixed!important;inset:0!important;max-width:none!important;width:100%!important;height:100vh!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:linear-gradient(118deg,#ffb000 0%,#ff9200 40%,#ff6500 72%,#ff5200 100%)!important}
+#loginView::before{content:'CENTRAL NOC';position:absolute;top:20%;left:50%;transform:translateX(-50%);z-index:2;color:#fff;font-weight:900;font-size:clamp(32px,4vw,58px);letter-spacing:.055em;white-space:nowrap;text-shadow:0 8px 28px rgba(123,45,0,.18)}
+#loginView::after{content:'';position:absolute;right:-170px;bottom:-230px;width:540px;height:540px;border-radius:50%;border:44px solid rgba(255,255,255,.14);box-shadow:0 0 0 48px rgba(255,255,255,.075),0 0 0 96px rgba(255,255,255,.04)}
+#loginView .login{position:relative;z-index:3;width:min(390px,calc(100vw - 34px))!important;margin:80px 0 0!important;padding:30px!important;background:#fff!important;color:#172033!important;border:0!important;border-radius:14px!important;box-shadow:0 28px 75px rgba(118,45,0,.28)!important}
 #loginView .login h2{color:#141b2d!important;font-size:25px!important;margin:0 0 8px!important}
 #loginView .login h2::after{content:'Gestão Operacional de Incidentes';display:block;margin-top:6px;font-size:12px;font-weight:600;color:#667085}
 #loginView label{color:#344054!important}
@@ -59,7 +44,6 @@ html,body{min-height:100%}
 #loginView input:focus{border-color:#ff7900!important;box-shadow:0 0 0 3px rgba(255,121,0,.13)!important}
 #loginView .primary{width:100%!important;margin-top:10px!important;background:linear-gradient(135deg,#ff9700,#ff6200)!important;border-radius:8px!important;box-shadow:0 9px 22px rgba(255,98,0,.24)!important}
 #loginView .err{color:#c62828!important}
-
 #appView{max-width:1600px!important;background:#f4f7fb!important;color:#172033!important;min-height:100vh!important}
 #appView .top{background:linear-gradient(118deg,#ff9d00,#ff6800)!important;border:0!important;box-shadow:0 12px 30px rgba(255,105,0,.18)!important}
 #appView .top h1{color:#fff!important}
@@ -82,11 +66,7 @@ html,body{min-height:100%}
 #appView .modalbox{background:#fff!important;color:#172033!important;border-color:#e1e6ee!important;box-shadow:0 30px 80px rgba(0,0,0,.28)!important}
 #appView .modalbox label{color:#596579!important}
 #appView .notice{background:#effcf5!important;border-color:#b9ebcf!important;color:#167546!important}
-@media(max-width:680px){
-  #loginView::before{top:11%;font-size:30px}
-  #loginView .login{margin-top:48px!important;padding:22px!important}
-  #appView{padding:9px!important}
-}
+@media(max-width:680px){#loginView::before{top:11%;font-size:30px}#loginView .login{margin-top:48px!important;padding:22px!important}#appView{padding:9px!important}}
 '''
           s = s.replace('</style>', css + '\n</style>', 1)
           p.write_text(s, encoding='utf-8')
@@ -104,3 +84,5 @@ html,body{min-height:100%}
           fi
           git commit -m 'Aplica frontend laranja diretamente no index'
           git push
+
+# trigger 2
