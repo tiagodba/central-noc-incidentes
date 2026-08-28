@@ -1,4 +1,4 @@
-name: "Corrigir normalização Central NOC"
+name: "Card verde de normalização Central NOC"
 
 "on":
   push:
@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 jobs:
-  normalize:
+  green-card:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Corrigir fluxo de normalização
+      - name: Aplicar identidade verde ao card normalizado
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -21,32 +21,12 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          s = s.replace(
-              '<option>AGUARDANDO</option><option>NORMALIZADO</option><option>CANCELADO</option>',
-              '<option>AGUARDANDO</option><option value="NORMALIZADO" disabled>NORMALIZADO (use o botão Normalizar)</option><option>CANCELADO</option>',
-              1
-          )
-
-          s = s.replace(
-              '<div class="field full"><label>Observações</label><textarea id="observacoes"></textarea></div><div class="full"><button class="btn primary" type="submit">Salvar incidente</button> <button class="btn ghost" type="button" id="clearBtn">Limpar</button></div>',
-              '<div class="field full"><label>Observações</label><textarea id="observacoes"></textarea></div><div class="full"><button class="btn primary" type="submit">Salvar incidente</button> <button class="btn success" type="button" id="normalizeFormBtn">Normalizar incidente</button> <button class="btn ghost" type="button" id="clearBtn">Limpar</button></div>',
-              1
-          )
-
-          old_open = "function openNorm(id){let i=inc.find(x=>x.id===id);if(!i)return alert('Incidente não encontrado.');resolveId.value=id;resTermino.value=local(new Date());resMotivo.value='';resOutro.value='';resOutroWrap.classList.add('hidden');resLat.value=i.latitude??'';resLong.value=i.longitude??'';resObs.value=i.observacao_final||'';resolveModal.classList.remove('hidden')}"
-          new_open = "function openNorm(id){let i=inc.find(x=>String(x.id)===String(id));if(!i)return alert('Incidente não encontrado.');if(i.status==='NORMALIZADO')return alert('Este incidente já está normalizado.');resolveId.value=i.id;resTermino.value=(dbId.value&&String(dbId.value)===String(i.id)&&termino.value)?termino.value:local(new Date());let currentMotivo=(dbId.value&&String(dbId.value)===String(i.id))?motivo.value:'';resMotivo.value=currentMotivo&&currentMotivo!=='OUTROS'?currentMotivo:'';resOutro.value=currentMotivo==='OUTROS'?motivo_outro.value:'';resOutroWrap.classList.toggle('hidden',currentMotivo!=='OUTROS');resLat.value=(dbId.value&&String(dbId.value)===String(i.id)&&latitude.value!=='')?latitude.value:(i.latitude??'');resLong.value=(dbId.value&&String(dbId.value)===String(i.id)&&longitude.value!=='')?longitude.value:(i.longitude??'');resObs.value=i.observacao_final||observacoes.value||'';status.value=i.status||'ABERTO';resolveModal.classList.remove('hidden')}"
-          if old_open in s:
-              s = s.replace(old_open, new_open, 1)
-
-          old_bind = "loginBtn.onclick=login;logoutBtn.onclick=()=>{sessionStorage.clear();location.reload()};form.onsubmit=save;clearBtn.onclick=clearForm;addTopoBtn.onclick=()=>addTopo();"
-          new_bind = "loginBtn.onclick=login;logoutBtn.onclick=()=>{sessionStorage.clear();location.reload()};form.onsubmit=save;normalizeFormBtn.onclick=()=>{if(!dbId.value)return alert('Salve ou abra um incidente antes de normalizar.');openNorm(dbId.value)};clearBtn.onclick=clearForm;addTopoBtn.onclick=()=>addTopo();"
-          if old_bind in s:
-              s = s.replace(old_bind, new_bind, 1)
-
-          old_status = "status.onchange=()=>{if(status.value==='NORMALIZADO'){if(dbId.value){status.value=editOriginalStatus||'ABERTO';openNorm(dbId.value)}else{status.value='ABERTO';alert('Para normalizar, salve o incidente e use o botão Normalizar.')}}};"
-          new_status = "status.onchange=()=>{editOriginalStatus=status.value||editOriginalStatus};"
-          if old_status in s:
-              s = s.replace(old_status, new_status, 1)
+          s = s.replace('--o:#ff7900;--o2:#ff9f1a','--o:#19a963;--o2:#22c55e',1)
+          s = s.replace('border-color:var(--o);background:#fff8f1;box-shadow:0 18px 44px rgba(255,122,0,.18)','border-color:#19a963;background:#f3fff7;box-shadow:0 18px 44px rgba(25,169,99,.18)',1)
+          s = s.replace('background:linear-gradient(135deg,var(--o2),#ff6500)','background:linear-gradient(135deg,#22c55e,#15803d)',1)
+          s = s.replace('background:linear-gradient(180deg,#fffaf6,#fff2e5)','background:linear-gradient(180deg,#f7fff9,#ecfdf3)',1)
+          s = s.replace('border:1px solid #ffd7b0','border:1px solid #b7ebc8',1)
+          s = s.replace('.ficha.green .lab{color:#a95000}', '.ficha.green .lab{color:#15803d}',1)
 
           p.write_text(s, encoding='utf-8')
           PY
@@ -56,5 +36,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Corrige fluxo de normalização do incidente"
+          git commit -m "Deixa card de normalização verde"
           git push
