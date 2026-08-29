@@ -99,6 +99,20 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
   };
   const fbody=d.getElementById('fbody');
   if(fbody){new MutationObserver(enhanceTopology).observe(fbody,{childList:true,subtree:true});enhanceTopology();}
+
+  const w=frame.contentWindow;
+  if(w){
+   w.sla=(i)=>{
+    const limite=Number(i?.prazo_sla_h||0);
+    if(!i?.inicio||!limite)return 'SEM SLA';
+    const fim=i.termino?new Date(i.termino):new Date();
+    const dec=Math.max(0,(fim-new Date(i.inicio))/36e5);
+    const dif=dec-limite;
+    if(dif>0)return `FORA • +${Math.round(dif)}h`;
+    return `DENTRO • ${Math.max(0,Math.ceil(-dif))}h restantes`;
+   };
+   if(typeof w.render==='function')w.render();
+  }
   setTimeout(()=>{if(user&&user.value)pass?.focus();else user?.focus();},50);
  }catch(e){console.error(e)}
 });
