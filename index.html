@@ -33,7 +33,10 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
 #appView .topobox,#appView .topocard{background:#fffaf5!important;border-color:#ffd3aa!important}#appView .tablewrap{background:#fff!important;border-color:#e6eaf0!important}#appView table{color:#172033!important}#appView th{background:#fff3e8!important;color:#954600!important;border-bottom:1px solid #ffd9b5!important}#appView td{border-bottom:1px solid #edf0f4!important}#appView tbody tr:hover{background:#fffaf6!important}
 #appView .ghost{color:#334155!important;background:#fff!important;border:1px solid #d7dee8!important}#appView .primary{background:linear-gradient(135deg,#ff9500,#ff6800)!important}#appView .modalbox{background:#fff!important;color:#172033!important;border-color:#e1e6ee!important;box-shadow:0 30px 80px rgba(0,0,0,.28)!important}#appView .modalbox label{color:#596579!important}#appView .notice{background:#effcf5!important;border-color:#b9ebcf!important;color:#167546!important}
 .ficha:not(.green){border-color:#e04c56!important;background:#fff!important}.ficha:not(.green) .fhead{background:#fff0f1!important;color:#c5313d!important}.ficha.green{border-color:#19a963!important;background:#f3fff7!important}.ficha.green .fhead{background:linear-gradient(135deg,#22c55e,#15803d)!important;color:#fff!important}
-#appView .topobox .danger{width:auto!important;min-width:92px!important;max-width:130px!important;padding:8px 12px!important;justify-self:end!important;white-space:nowrap!important}
+#appView .topobox .danger{width:auto!important;min-width:82px!important;max-width:118px!important;padding:7px 11px!important;min-height:34px!important;justify-self:end!important;white-space:nowrap!important}
+#appView .topocard> .row3:first-child{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important}
+#appView .topocard .ports .row3{grid-template-columns:minmax(0,2fr) minmax(120px,1fr) auto!important;align-items:center!important}
+#appView .topocard .ports .row3 .danger{margin-left:2px!important}
 #appView .topology-detail-row{display:grid!important;grid-template-columns:minmax(180px,2fr) minmax(80px,.7fr) minmax(80px,.7fr)!important;gap:8px!important;margin:4px 0!important}
 #appView .topology-detail-item{display:flex!important;gap:6px!important;align-items:center!important;padding:7px 9px!important;border:1px solid #dbe4ef!important;border-radius:8px!important;background:#f8fafc!important;min-width:0!important}
 #appView .topology-detail-item b{font-size:9px!important;color:#7b8799!important;letter-spacing:.04em!important}.topology-detail-item span{overflow-wrap:anywhere!important}
@@ -49,6 +52,8 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
  #appView form .full{grid-column:1/-1!important}
  #appView form .topobox{grid-column:1/-1!important}
  #appView .row3{grid-template-columns:2fr 1fr 1fr auto!important;align-items:end!important}
+ #appView .topocard> .row3:first-child{grid-template-columns:minmax(0,1fr) auto!important}
+ #appView .topocard .ports .row3{grid-template-columns:minmax(0,2fr) minmax(120px,1fr) auto!important}
  #appView textarea{min-height:66px!important}
  #appView .toolbar{flex-wrap:nowrap!important}
  #appView .tools{flex-wrap:nowrap!important}
@@ -70,7 +75,7 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
  #appView form{grid-template-columns:repeat(2,minmax(0,1fr))!important}
  #appView .full,#appView .topobox{grid-column:1/-1!important}
 }
-@media(max-width:680px){#loginView::before{top:11%;font-size:30px}#loginView .login{margin-top:48px!important;padding:22px!important}#appView{padding:9px!important}#appView .topology-detail-row{grid-template-columns:1fr!important}}
+@media(max-width:680px){#loginView::before{top:11%;font-size:30px}#loginView .login{margin-top:48px!important;padding:22px!important}#appView{padding:9px!important}#appView .topology-detail-row{grid-template-columns:1fr!important}#appView .topocard .ports .row3,#appView .topocard> .row3:first-child{grid-template-columns:1fr!important}#appView .topobox .danger{justify-self:start!important}}
 `;d.head.appendChild(s);
   }
   const user=d.getElementById('username');
@@ -112,6 +117,39 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
     return `DENTRO • ${Math.max(0,Math.ceil(-dif))}h restantes`;
    };
    if(typeof w.render==='function')w.render();
+  }
+
+  const card=d.getElementById('card');
+  const standaloneCss=`*{box-sizing:border-box}body{margin:0;padding:22px;background:#f4f7fb;color:#172033;font-family:Arial,sans-serif}.page{max-width:1500px;margin:auto}.brand{font-size:13px;font-weight:900;letter-spacing:.08em;color:#ff6b00;margin:0 0 10px}.ficha{border:2px solid #e04c56;border-radius:17px;overflow:hidden;background:#fff;color:#0c1220;box-shadow:0 18px 44px rgba(16,24,40,.10)}.fhead{padding:17px;text-align:center;font-size:21px;font-weight:900;background:#fff0f1;color:#c5313d}.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.cell{padding:12px;border-right:1px solid #d8e0ea;border-bottom:1px solid #d8e0ea;min-height:72px}.lab{font-size:9px;text-transform:uppercase;color:#657286;font-weight:900}.val{font-size:14px;font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:5px}.span2{grid-column:span 2}.span4{grid-column:1/-1}.ficha.green{border-color:#19a963;background:#f3fff7}.ficha.green .fhead{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff}.ficha.green .fhead small{display:block;font-size:10px;letter-spacing:.15em;text-transform:uppercase;margin-top:5px}.ficha.green .fgrid{gap:9px;padding:12px;background:#ecfdf3}.ficha.green .cell{background:#fff;border:1px solid #b7ebc8;border-radius:11px}.topology-detail-row{display:grid;grid-template-columns:minmax(180px,2fr) minmax(80px,.7fr) minmax(80px,.7fr);gap:8px;margin:4px 0}.topology-detail-item{display:flex;gap:6px;align-items:center;padding:7px 9px;border:1px solid #dbe4ef;border-radius:8px;background:#f8fafc}.topology-detail-item b{font-size:9px;color:#7b8799}.topology-detail-item span{overflow-wrap:anywhere}@media(max-width:720px){body{padding:10px}.fgrid{grid-template-columns:1fr}.span2,.span4{grid-column:1}.topology-detail-row{grid-template-columns:1fr}}`;
+  const fillCardTab=(tab,title)=>{
+   if(!tab||tab.closed||!card)return;
+   enhanceTopology();
+   const clone=card.cloneNode(true);clone.classList.remove('hidden');
+   tab.document.open();tab.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safe(title)}</title><style>${standaloneCss}</style></head><body><main class="page"><div class="brand">CENTRAL NOC • GESTÃO OPERACIONAL</div>${clone.outerHTML}</main></body></html>`);tab.document.close();
+   card.classList.add('hidden');
+  };
+  const tbody=d.getElementById('tbody');
+  if(tbody&&!tbody.dataset.newTabCards){
+   tbody.addEventListener('click',e=>{
+    const view=e.target.closest('[data-v]');if(!view)return;
+    const tab=window.open('about:blank','_blank');
+    if(tab){tab.document.write('<title>Abrindo incidente...</title><body style="font-family:Arial;padding:24px">Carregando incidente...</body>');}
+    setTimeout(()=>fillCardTab(tab,'Incidente NOC'),80);
+   },true);
+   tbody.dataset.newTabCards='1';
+  }
+  const confirm=d.getElementById('confirmResolve');
+  if(confirm&&!confirm.dataset.newTabCard){
+   confirm.addEventListener('click',()=>{
+    const tab=window.open('about:blank','_blank');
+    if(tab){tab.document.write('<title>Normalização NOC</title><body style="font-family:Arial;padding:24px">Concluindo normalização...</body>');}
+    let tries=0;const timer=setInterval(()=>{
+     tries++;
+     if(card&&!card.classList.contains('hidden')&&card.classList.contains('green')){clearInterval(timer);fillCardTab(tab,'Normalização de Incidente NOC');}
+     else if(tries>80){clearInterval(timer);if(tab&&!tab.closed)tab.close();}
+    },150);
+   },true);
+   confirm.dataset.newTabCard='1';
   }
   setTimeout(()=>{if(user&&user.value)pass?.focus();else user?.focus();},50);
  }catch(e){console.error(e)}
