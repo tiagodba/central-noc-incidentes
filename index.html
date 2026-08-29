@@ -34,6 +34,9 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
 #appView .ghost{color:#334155!important;background:#fff!important;border:1px solid #d7dee8!important}#appView .primary{background:linear-gradient(135deg,#ff9500,#ff6800)!important}#appView .modalbox{background:#fff!important;color:#172033!important;border-color:#e1e6ee!important;box-shadow:0 30px 80px rgba(0,0,0,.28)!important}#appView .modalbox label{color:#596579!important}#appView .notice{background:#effcf5!important;border-color:#b9ebcf!important;color:#167546!important}
 .ficha:not(.green){border-color:#e04c56!important;background:#fff!important}.ficha:not(.green) .fhead{background:#fff0f1!important;color:#c5313d!important}.ficha.green{border-color:#19a963!important;background:#f3fff7!important}.ficha.green .fhead{background:linear-gradient(135deg,#22c55e,#15803d)!important;color:#fff!important}
 #appView .topobox .danger{width:auto!important;min-width:92px!important;max-width:130px!important;padding:8px 12px!important;justify-self:end!important;white-space:nowrap!important}
+#appView .topology-detail-row{display:grid!important;grid-template-columns:minmax(180px,2fr) minmax(80px,.7fr) minmax(80px,.7fr)!important;gap:8px!important;margin:4px 0!important}
+#appView .topology-detail-item{display:flex!important;gap:6px!important;align-items:center!important;padding:7px 9px!important;border:1px solid #dbe4ef!important;border-radius:8px!important;background:#f8fafc!important;min-width:0!important}
+#appView .topology-detail-item b{font-size:9px!important;color:#7b8799!important;letter-spacing:.04em!important}.topology-detail-item span{overflow-wrap:anywhere!important}
 
 /* Layout horizontal v3 */
 @media(min-width:1101px){
@@ -67,7 +70,7 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
  #appView form{grid-template-columns:repeat(2,minmax(0,1fr))!important}
  #appView .full,#appView .topobox{grid-column:1/-1!important}
 }
-@media(max-width:680px){#loginView::before{top:11%;font-size:30px}#loginView .login{margin-top:48px!important;padding:22px!important}#appView{padding:9px!important}}
+@media(max-width:680px){#loginView::before{top:11%;font-size:30px}#loginView .login{margin-top:48px!important;padding:22px!important}#appView{padding:9px!important}#appView .topology-detail-row{grid-template-columns:1fr!important}}
 `;d.head.appendChild(s);
   }
   const user=d.getElementById('username');
@@ -75,6 +78,27 @@ html,body{min-height:100%!important;background:#f4f7fb!important;color:#172033!i
   const btn=d.getElementById('loginBtn');
   const enterLogin=(e)=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();btn?.click();}};
   [user,pass].forEach(el=>{if(el&&!el.dataset.enterBound){el.addEventListener('keydown',enterLogin);el.dataset.enterBound='1';}});
+
+  const safe=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const enhanceTopology=()=>{
+   const body=d.getElementById('fbody');if(!body)return;
+   const topo=[...body.querySelectorAll('.cell')].find(c=>(c.querySelector('.lab')?.textContent||'').trim().toUpperCase()==='TOPOLOGIA');
+   if(!topo)return;
+   const val=topo.querySelector('.val');if(!val||val.dataset.topologyEnhanced==='1')return;
+   const raw=(val.textContent||'').trim();if(!raw||raw==='-')return;
+   const rows=[];
+   raw.split(/\n+/).forEach(line=>{
+    const idx=line.indexOf(':');
+    const olt=(idx>=0?line.slice(0,idx):'').trim();
+    const rest=idx>=0?line.slice(idx+1):line;
+    for(const m of rest.matchAll(/Slot\s*([^\/,\n]+)\s*\/\s*PON\s*([^,\n]+)/gi)) rows.push({olt,slot:m[1].trim(),pon:m[2].trim()});
+   });
+   if(!rows.length)return;
+   val.dataset.topologyEnhanced='1';
+   val.innerHTML=rows.map(r=>`<div class="topology-detail-row"><div class="topology-detail-item"><b>OLT</b><span>${safe(r.olt||'-')}</span></div><div class="topology-detail-item"><b>SLOT</b><span>${safe(r.slot||'-')}</span></div><div class="topology-detail-item"><b>PON</b><span>${safe(r.pon||'-')}</span></div></div>`).join('');
+  };
+  const fbody=d.getElementById('fbody');
+  if(fbody){new MutationObserver(enhanceTopology).observe(fbody,{childList:true,subtree:true});enhanceTopology();}
   setTimeout(()=>{if(user&&user.value)pass?.focus();else user?.focus();},50);
  }catch(e){console.error(e)}
 });
